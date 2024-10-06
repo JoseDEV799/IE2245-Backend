@@ -12,13 +12,10 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 const app = express();
-const corsOptions = {
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],  // Especifica los métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],  // Especifica los encabezados permitidos
-};
-app.use(cors(corsOptions))
+app.use(cors({
+    origin: process.env.FRONTEND_URL, // Asegúrate de que esta URL es correcta
+    credentials: true // Permite el uso de cookies
+}));
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
