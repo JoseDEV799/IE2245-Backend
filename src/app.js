@@ -12,11 +12,10 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 const app = express();
-let allowUrls = "*"
 
 app.use(
     cors({
-        origin: allowUrls,
+        origin: 'https://jose-dev-799-biblioteca-ie-22455-pisco-frontend.vercel.app',
         methods: ["GET", "POST", "DELETE", "UPDATE", "PUT"],
         credentials: true,
         // allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
