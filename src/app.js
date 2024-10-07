@@ -12,16 +12,22 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 const app = express();
-app.use(cors({
-    origin: process.env.BACKEND_URL,
-    credentials: true
-}));
+let allowUrls = "*"
+
+app.use(
+    cors({
+        origin: allowUrls,
+        methods: ["GET", "POST", "DELETE", "UPDATE", "PUT"],
+        credentials: true,
+        // allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
+    })
+);
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
 
-app.use('/api',authRoutes)
-app.use('/api',bookRoutes)
-app.use('/api',categoryRoutes)
+app.use('/api', authRoutes)
+app.use('/api', bookRoutes)
+app.use('/api', categoryRoutes)
 
 export default app;
