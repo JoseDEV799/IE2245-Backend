@@ -13,15 +13,13 @@ import dotenv from 'dotenv';
 dotenv.config()
 const app = express();
 
-app.use(
-    cors({
-        origin: 'https://jose-dev-799-biblioteca-ie-22455-pisco-frontend.vercel.app',
-        // methods: ["GET", "POST", "DELETE", "UPDATE", "PUT"],
-        credentials: true,
-        // allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
-    })
-);
-// app.options('*', cors());
+app.use(cors({
+    origin: 'https://jose-dev-799-biblioteca-ie-22455-pisco-frontend.vercel.app',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
