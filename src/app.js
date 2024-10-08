@@ -14,7 +14,7 @@ dotenv.config()
 const app = express();
 
 app.use(cors({
-    origin: 'https://jose-dev-799-biblioteca-ie-22455-pisco-frontend.vercel.app',
+    origin: 'https://frontend-ie22455.vercel.app',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
