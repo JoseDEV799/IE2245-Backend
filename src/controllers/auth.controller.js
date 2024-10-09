@@ -36,35 +36,34 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     const { dni, password } = req.body;
     try {
-        const userFound = await User.findOne({dni})
-        if (!userFound) return res.status(400).json({
-            'message': 'Usuario no encontrado'
-        })
-        const isMatch = await bcrypt.compare(password, userFound.password)
-        if (!isMatch) return res.status(400).json({
-            'message' : 'Credenciales incorrectas'
-        })
+        const userFound = await User.findOne({ dni });
+        if (!userFound) {
+            return res.status(400).json({ 'message': 'Usuario no encontrado' });
+        }
+        
+        const isMatch = await bcrypt.compare(password, userFound.password);
+        if (!isMatch) {
+            return res.status(400).json({ 'message': 'Credenciales incorrectas' });
+        }
 
-        const token = await createAccessToken({id: userFound._id})
-        res.cookie('token', token, {
-            sameSite:'lax',
-            secure: false,
-            httpOnly:true
-        });
-        res.json({
+        const token = await createAccessToken({ id: userFound._id });
+
+        // Establece la cookie manualmente usando setHeader
+        res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; SameSite=Lax; Secure=${process.env.NODE_ENV === 'production'}`);
+
+        res.status(200).json({
             id: userFound._id,
             username: userFound.username,
             email: userFound.email,
             dni: userFound.dni,
             createdAt: userFound.createdAt,
             updateAt: userFound.updateAt
-        })
+        });
     } catch (error) {
-        res.status(500).json({
-            'message': error.message
-        })
+        res.status(500).json({ 'message': error.message });
     }
-}
+};
+
 
 export const logout = (req, res) => {
     res.cookie('token', '', {
