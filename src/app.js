@@ -14,7 +14,7 @@ dotenv.config()
 const app = express();
 
 app.use(cors({
-    origin: ['https://biblioteca.josedev.net.pe', 'http://localhost:5173'],
+    origin: 'https://biblioteca.josedev.net.pe',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
