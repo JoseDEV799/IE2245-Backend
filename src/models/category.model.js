@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 const CategorySchema = new mongoose.Schema({
-    name: {
+    nombre: {
         type: String,
         required: true
     },
-    abbreviation: {
+    abreviatura: {
         type: String,
         required: true
     }
@@ -12,4 +12,5 @@ const CategorySchema = new mongoose.Schema({
     timestamps: true
 })
 
-export default mongoose.model('Category', CategorySchema)
+const Category = mongoose.model('Category', CategorySchema)
+export default Category

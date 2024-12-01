@@ -1,19 +1,17 @@
 import { Router } from 'express'
 import { authRequired } from '../middlewares/validateToken.js'
-import { allCategories, findCategory ,storeCategory, updateCategory, deleteCategory } from '../controllers/category.controller.js'
+import { validateSchema } from "../middlewares/validateSchema.js";
+import { obtenerCategorias, obtenerCategoria, crearCategoria, modificarCategoria, eliminarCategoria } from '../controllers/category.controller.js'
+import { RegisterSchema, UpdateSchema } from '../schemas/category.schema.js';
 
 const router = Router()
 
-// router.get('/category', authRequired, allCategories)
-// router.post('/category/id/:id', authRequired, findCategory)
-// router.post('/category/store', authRequired, storeCategory)
-// router.post('/category/update', authRequired, updateCategory)
-// router.post('/category/delete', authRequired, deleteCategory)
+//Cliente
 
-router.get('/category', allCategories)
-router.post('/category/id/:id', findCategory)
-router.post('/category/store', storeCategory)
-router.post('/category/update', updateCategory)
-router.post('/category/delete', deleteCategory)
+// Admin
+router.get('/admin/category/categories', obtenerCategorias)
+router.post('/admin/category/register', validateSchema(RegisterSchema), crearCategoria)
+router.post('/admin/category/eliminar',  eliminarCategoria)
+router.post('/admin/category/update/:idcategoria', validateSchema(UpdateSchema), modificarCategoria)
 
 export default router

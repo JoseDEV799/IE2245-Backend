@@ -1,8 +1,19 @@
 import { Router } from 'express'
 import { authRequired } from '../middlewares/validateToken.js'
-import { allBooks, findBookID, findBook, storeBook, updateBook, deleteBook, findBooksCategory } from '../controllers/book.controller.js'
+import { obtenerLibros, obtenerLibro, crearLibro, modificarLibro, eliminarLibro } from '../controllers/book.controller.js'
 
 const router = Router()
+
+//Cliente
+
+
+//Admin
+router.get('/admin/book/books', obtenerLibros)
+router.get('/admin/book/:idlibro', obtenerLibro)
+router.post('/admin/book/register', crearLibro)
+router.post('/admin/book/eliminar', eliminarLibro)
+router.post('/admin/book/:idlibro', modificarLibro)
+
 
 // router.get('/books', authRequired, allBooks)
 // router.post('/books/id/:id', authRequired, findBookID)
@@ -12,11 +23,4 @@ const router = Router()
 // router.post('/books/update', authRequired, updateBook)
 // router.post('/books/delete', authRequired, deleteBook)
 
-router.get('/books', allBooks)
-router.post('/books/id/:id', findBookID)
-router.post('/books/category', findBooksCategory)
-router.post('/books/search', findBook)
-router.post('/books/store', storeBook)
-router.post('/books/update', updateBook)
-router.post('/books/delete', deleteBook)
 export default router

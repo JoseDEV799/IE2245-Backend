@@ -1,97 +1,81 @@
 import { json } from 'express'
 import Category from '../models/category.model.js'
-
-export const allCategories = async (req, res) => {
+import Book from '../models/book.model.js'
+export const obtenerCategorias = async(req, res) => {
     try {
-        const Categories = await Category.find()
-        if (Categories.length == 0) return res.json({
-            "message": "No se encontro ninguna categoria"
-        })
-        res.json({
-            "Categorias": Categories
-        })
-        return Categories
+        const categoriasFound = await Category.find()
+        if (categoriasFound.length == 0) return res.status(204).send('Sin resultados');
+        return res.status(200).send(categoriasFound)
     } catch (error) {
-        res.status(500).json({
-            "message": error.message
-        });
+        console.log(error);
+        return res.status(400).send('Ocurrio un problema')
     }
 }
 
-export const findCategory = async (req, res) => {
-    const { id } = req.body
-    console.log("Hola")
+export const obtenerCategoria = async(req, res) => {
     try {
-        const categoryFound = await Category.findById(id)
-        if (!categoryFound) return res.status(400).json({
-            "message": "Categoria no encontrada"
-        })
-        res.status(200).json({
-            id: categoryFound._id,
-            name: categoryFound.name,
-            abbreviation: categoryFound.abbreviation
-        })
-        return categoryFound
+        const { idcategoria } = req.params
+        const categoriaFound = await Category.findById(idcategoria)
+        if (!categoriaFound) return res.status(204).send('Categoria no encontrada');
+        return res.status(200).send(categoriaFound)
     } catch (error) {
-        res.status(500).json({
-            "message": error.message
-        });
+        console.log(error);
+        return res.status(400).send('Ocurrio un problema')
     }
 }
 
-export const storeCategory = async (req, res) => {
-    const { name, abbreviation } = req.body
+export const crearCategoria = async(req, res) => {
     try {
-        const newCategory = new Category({
-            name,
-            abbreviation
+        const { nombre, abreviatura } = req.body
+        const newCategoria = new Category({
+            nombre: nombre,
+            abreviatura: abreviatura
         })
-        newCategory.save()
-        res.status(200).json({
-            "message": "Categoria resgistrado correctamente",
-            "categoria": {
-                id: newCategory._id,
-                name: newCategory.name,
-                abbreviation: newCategory.abbreviation 
-            }
-        });
+        await newCategoria.save()
+        return res.status(200).json({
+            message: 'Categoria creada correctamente',
+            categoria: newCategoria
+        })
     } catch (error) {
-        res.status(500).json({
-            "message": error.message
-        });
+        console.log(error);
+        return res.status(400).send('Ocurrio un problema')
     }
 }
 
-export const updateCategory = async (req, res) => {
-    const { id, name, abbreviation } = req.body
-    console.log("Obteniendo datos")
+export const modificarCategoria = async(req, res) => {
     try {
-        const categoryFound = await Category.findByIdAndUpdate(
-            id,
-            { name, abbreviation },
-            { new: true }
+        const { idcategoria } = req.params
+        const { nombre, abreviatura } = req.body
+        const categoriaFound = await Category.findByIdAndUpdate(
+            idcategoria,
+            {nombre, abreviatura},
+            {new: true}
         )
-        if (!categoryFound) return res.status(400).json({
-            "message": "Categoria no encontrada"
+        if (!categoriaFound) return res.status(404).send('Categoria no encontrada')
+        return res.status(200).json({
+            message: 'Categoria actualizada correctamente',
+            categoria: categoriaFound 
         })
-        res.status(200).json({
-            id: categoryFound._id,
-            name: categoryFound.name,
-            abbreviation: categoryFound.abbreviation
-        });
     } catch (error) {
-        res.status(500).json({
-            "message": error.message
-        });
+        console.log(error);
+        return res.status(400).send('Ocurrio un problema')
     }
 }
 
-export const deleteCategory = async (req, res) => {
+export const eliminarCategoria = async(req, res) => {
     try {
-        res.json({ "message": "proximamente" })
+        const { id } = req.body
+        const categoriaFound = await Category.findById(id)
+        if (!categoriaFound) return res.status(404).send('Categoria no encontrada');
+        const libros = await Book.find({ category_id : id})
+        for (const libro of Array.isArray(libros) ? libros : [libros]) {
+            libro.category_id = null
+            await libro.save()
+        }
+        await Category.findByIdAndDelete(id)
+        return res.status(200).send('Categoria eliminada correctamente')
     } catch (error) {
-        res.status(500).json({
-            "message": error.message
-        });
+        console.log(error);
+        return res.status(400).send('Ocurrio un problema')
     }
 }

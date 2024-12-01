@@ -1,29 +1,40 @@
 import mongoose from "mongoose";
 const BookSchema = new mongoose.Schema({
-    title: {
+    denominacion: {
         type: String,
         required: true,
         trim: true,
     },
-    author:{
+    autor: {
         type: String,
         required: true,
         trim: true,
     },
-    category: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    stock: {
+    observacion: {
         type: String,
         required: true,
         trim: true
     },
-    observation: {
+    cantidad: {
         type: String,
-        required: true,
+        require: true,
+        trim: true,
+        default: null,
+    },
+    area: {
+        type: String,
+        require: true,
         trim: true
+    },
+    category_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+    },
+    portada: {
+        type: String,
+    },
+    pdf: {
+        type:String
     }
 },{
     timestamps: true
